@@ -2,6 +2,9 @@
 #include "SoftwareTimers.h"
 #include "WifiHandler.h"
 
+#define SDA_PIN 0U
+#define SCL_PIN 2U
+
 SensorData sensorData;
 ConfigValues configValues;
 RealTimeClock realTimeClock;
@@ -11,7 +14,11 @@ WebServer webServer;
 
 void setup(void)
 {
+  Wire.begin(SDA_PIN, SCL_PIN);
+
   Serial.begin(115200);
+
+  WifiHandler_init(&sdHandler);
 
   realTimeClock.init();
 
@@ -20,8 +27,6 @@ void setup(void)
   relayHandler.init(&configValues, &sdHandler, &realTimeClock);
 
   sdHandler.init(&realTimeClock, &sensorData, &configValues);
-
-  WifiHandler_init(&sdHandler);
 
   webServer.init(&configValues, &sdHandler, &sensorData, &realTimeClock, &relayHandler);
 

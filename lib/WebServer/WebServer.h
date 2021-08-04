@@ -2,11 +2,8 @@
 #define WEB_SERVER_H
 
 #include "ESP8266WebServer.h"
-
 #include <WebSocketsServer.h>
-
 #include <ESP8266mDNS.h>
-
 #include "ArduinoJson.h"
 #include "ProcessValues.h"
 #include "SDHandler.h"

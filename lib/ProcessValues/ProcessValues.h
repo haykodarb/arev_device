@@ -5,7 +5,7 @@
 
 #include "DallasTemperature.h"
 
-#define SENSOR_PIN 0U // quizas haya que cambiar a 3
+#define SENSOR_PIN 0U
 
 class SensorData
 {

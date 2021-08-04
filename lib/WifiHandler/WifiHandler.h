@@ -2,6 +2,7 @@
 #define WIFI_HANDLER_H
 
 #include <ESP8266WiFi.h>
+#include <WebSocketsServer.h>
 #include <WiFiClient.h>
 #include <WiFiManager.h>
 #include "SDHandler.h"

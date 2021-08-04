@@ -12,7 +12,6 @@ void SDHandler::init(RealTimeClock *_realTimeClock, SensorData *_sensorData, Con
 
     deviceID = "arev" + String(ESP.getChipId(), 16);
     deviceID.toLowerCase();
-
     SD.begin(CS_PIN);
 
     readName();
