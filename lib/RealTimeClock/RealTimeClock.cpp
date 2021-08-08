@@ -5,7 +5,17 @@ static DateTime now;
 
 void RealTimeClock::init(void)
 {
-    rtc.begin();
+    Wire.begin(SDA_PIN, SCL_PIN);
+
+    if (rtc.begin())
+    {
+        rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
+        Serial.println("RTC begin right");
+    }
+    else
+    {
+        Serial.println("RTC begin error");
+    }
 }
 
 void RealTimeClock::adjust(DateTime newDateTime)

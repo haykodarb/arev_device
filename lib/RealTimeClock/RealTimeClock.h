@@ -3,6 +3,9 @@
 
 #include "RTClib.h"
 
+#define SDA_PIN 4U
+#define SCL_PIN 5U
+
 class RealTimeClock
 {
 public:

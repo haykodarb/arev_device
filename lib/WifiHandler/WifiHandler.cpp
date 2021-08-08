@@ -191,7 +191,6 @@ void WifiHandler_loop(void)
 
 void WifiHandler_init(SDHandler *_sdHandler)
 {
-
     sdHandler = _sdHandler;
 
     sdHandler->deviceID.toCharArray(apName, 10);
@@ -199,7 +198,7 @@ void WifiHandler_init(SDHandler *_sdHandler)
     Serial.println("PROCESS: WIFI HANDLER INIT");
 
     delay(5000);
-    /*
+
     if (!autoConnect())
     {
         ESP.reset();
@@ -208,13 +207,5 @@ void WifiHandler_init(SDHandler *_sdHandler)
     else
     {
         server.close();
-    }
-
-    */
-
-    if (!wifiManager.autoConnect())
-    {
-        ESP.reset();
-        delay(4000);
     }
 }

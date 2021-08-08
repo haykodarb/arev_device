@@ -8,6 +8,7 @@ static SDHandler *sdHandler;
 static SensorData *sensorData;
 static RealTimeClock *realTimeClock;
 static RelayHandler *relayHandler;
+MDNSResponder::hMDNSService hMDNSService = 0; // The handle of the clock service in the MDNS responder
 
 static bool shouldBroadcast = false;
 
@@ -141,7 +142,8 @@ void WebServer::init(ConfigValues *_configValues, SDHandler *_sdHandler, SensorD
     String instanceName = sdHandler->deviceName;
     String mdnsAddress = sdHandler->deviceID;
 
-    MDNS.addService("arev", "tcp", 80);
+    hMDNSService = MDNS.addService(0, "arev", "tcp", 80);
+    MDNS.addServiceTxt(hMDNSService, "type", 1);
     MDNS.setHostname(instanceName);
     MDNS.begin(mdnsAddress);
 
