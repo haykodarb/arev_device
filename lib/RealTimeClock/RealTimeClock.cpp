@@ -5,7 +5,7 @@ static DateTime now;
 
 void RealTimeClock::init(void)
 {
-    Wire.begin(SDA_PIN, SCL_PIN);
+    // Wire.begin(SDA_PIN, SCL_PIN); // Uncomment when using PCB.
 
     if (rtc.begin())
     {
