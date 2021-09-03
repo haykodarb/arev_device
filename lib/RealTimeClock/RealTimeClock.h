@@ -3,6 +3,7 @@
 
 #include "RTClib.h"
 
+/* This pins are defined for the newer PCB version */
 #define SDA_PIN 4U
 #define SCL_PIN 5U
 

@@ -9,7 +9,6 @@ void RealTimeClock::init(void)
 
     if (rtc.begin())
     {
-        rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
         Serial.println("RTC begin right");
     }
     else
