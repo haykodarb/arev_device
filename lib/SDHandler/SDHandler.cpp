@@ -110,6 +110,16 @@ void SDHandler::writeToDay(uint8_t _isResistanceOn)
 
     File myFile;
     String fileToOpen = "/day/" + currentDate + ".csv";
+
+    /* Analizar todos los posibles escenarios respecto a esto */
+    if (!SD.exists(fileToOpen))
+    {
+        String firstRead = "0," + String(currentTemp) + "," + String(isResistanceOn) + ";";
+        myFile = SD.open(fileToOpen, FILE_WRITE);
+        myFile.print(firstRead);
+        myFile.close();
+    }
+
     myFile = SD.open(fileToOpen, FILE_WRITE);
     myFile.print(dataToWrite);
     myFile.close();
