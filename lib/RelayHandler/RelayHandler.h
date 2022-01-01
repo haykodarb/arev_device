@@ -7,7 +7,7 @@ class SDHandler;
 #include "RealTimeClock.h"
 #include "SDHandler.h"
 
-#define RELAY_PIN 2U
+#define RELAY_PIN 5U
 #define RELAY_ON HIGH
 #define RELAY_OFF LOW
 

@@ -5,7 +5,6 @@ static DateTime now;
 
 void RealTimeClock::init(void)
 {
-    // Wire.begin(SDA_PIN, SCL_PIN); // Uncomment when using PCB.
 
     if (rtc.begin())
     {
@@ -61,6 +60,13 @@ String RealTimeClock::dayNumber(void)
 String RealTimeClock::webSocketTime(void)
 {
     char webSocketFormat[] = "hh:mm";
+
     String webSocketTime = now.toString(webSocketFormat);
     return webSocketTime;
+}
+
+String RealTimeClock::webServerTime(void)
+{
+    String unixTime = String(now.unixtime());
+    return unixTime;
 }

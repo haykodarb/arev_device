@@ -1,6 +1,6 @@
 #include "WifiHandler.h"
 
-static WiFiManager wifiManager;
+static WiFiConnect wc;
 static SDHandler *sdHandler;
 static RelayHandler *relayHandler;
 
@@ -21,15 +21,22 @@ void WifiHandler_init(SDHandler *_sdHandler)
 {
     sdHandler = _sdHandler;
 
-    WiFi.mode(WIFI_STA);
-    wifiManager.setConfigPortalTimeout(150);
+    char charArrayName[15];
+    sdHandler->getDeviceID().toCharArray(charArrayName, 15);
 
-    char charArrayName[10];
-    sdHandler->deviceID.toCharArray(charArrayName, 10);
+    WiFi.persistent(true);
 
-    if (!wifiManager.autoConnect(charArrayName, AP_PASSWORD))
+    wc.setDebug(true);
+
+    /*
+       AP_NONE = Continue executing code
+       AP_LOOP = Trap in a continuous loop - Device is useless
+       AP_RESET = Restart the chip
+       AP_WAIT  = Trap in a continuous loop with captive portal until we have a working WiFi connection
+    */
+
+    if (!wc.autoConnect())
     {
-        ESP.reset();
-        delay(3000);
+        wc.startConfigurationPortal(AP_RESET, charArrayName, ""); // if not connected show the configuration portal
     }
 }

@@ -8,8 +8,6 @@ void SensorData::update(void)
     sensors.requestTemperatures();
     float newTemp = sensors.getTempCByIndex(0);
 
-    Serial.println(newTemp);
-
     if (newTemp != DEVICE_DISCONNECTED_C && newTemp != 0.00)
     {
         currentTemp = newTemp;

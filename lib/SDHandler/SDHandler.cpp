@@ -10,12 +10,29 @@ void SDHandler::init(RealTimeClock *_realTimeClock, SensorData *_sensorData, Con
     sensorData = _sensorData;
     configValues = _configValues;
 
-    deviceID = "arev" + String(ESP.getChipId(), 16);
-    deviceID.toLowerCase();
+    _deviceID = "arev" + String(ESP.getChipId(), 16);
+    _deviceID.toLowerCase();
+
     SD.begin(CS_PIN);
 
+    readPower();
     readName();
     readConfig();
+}
+
+String SDHandler::getName(void)
+{
+    return _deviceName;
+}
+
+uint16_t SDHandler::getPower(void)
+{
+    return _devicePower;
+}
+
+String SDHandler::getDeviceID(void)
+{
+    return _deviceID;
 }
 
 void SDHandler::writeName(String newName)
@@ -25,7 +42,7 @@ void SDHandler::writeName(String newName)
         SD.remove("/config/name.txt");
     }
     File nameFile = SD.open("/config/name.txt", FILE_WRITE);
-    deviceName = newName;
+    _deviceName = newName;
     nameFile.print(newName);
     nameFile.close();
 }
@@ -44,12 +61,50 @@ void SDHandler::readName(void)
             newName += newChar;
         }
 
-        deviceName = newName;
+        _deviceName = newName;
         nameFile.close();
     }
     else
     {
-        deviceName = deviceID;
+        _deviceName = _deviceID;
+    }
+}
+
+void SDHandler::writePower(uint16_t newPowerValue)
+{
+    if (SD.exists("/config/power.txt"))
+    {
+        SD.remove("/config/power.txt");
+    }
+
+    File powerFile = SD.open("/config/power.txt", FILE_WRITE);
+    _devicePower = newPowerValue;
+
+    powerFile.print(String(newPowerValue));
+    powerFile.close();
+}
+
+void SDHandler::readPower(void)
+{
+    if (SD.exists("/config/power.txt"))
+    {
+
+        File powerFile = SD.open("/config/power.txt");
+        String powerValueString = "";
+
+        while (powerFile.available())
+        {
+            char newChar = powerFile.read();
+            powerValueString += newChar;
+        }
+
+        _devicePower = powerValueString.toInt();
+
+        powerFile.close();
+    }
+    else
+    {
+        _devicePower = DEFAULT_POWER;
     }
 }
 

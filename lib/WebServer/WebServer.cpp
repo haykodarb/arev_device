@@ -84,12 +84,24 @@ static void handleConfigGet(void)
     server.send(200, "application/json", jsonOutput);
 }
 
-static void handleTimeAdjust(void)
+static void handleTimeChange(void)
 {
-    uint32_t epochTime = server.arg("epoch").toInt();
+    uint32_t epochTime = server.arg("new").toInt();
     DateTime newTime = DateTime(epochTime);
     realTimeClock->adjust(newTime);
     server.send(200, "text/plain", "Tiempo ajustado correctamente");
+}
+
+static void handleTimeGet(void)
+{
+    StaticJsonDocument<100> data;
+    String jsonOutput;
+
+    data["time"] = realTimeClock->webServerTime();
+
+    serializeJson(data, jsonOutput);
+
+    server.send(200, "application/json", jsonOutput);
 }
 
 static void handleNameChange(void)
@@ -97,19 +109,31 @@ static void handleNameChange(void)
     String newName = server.arg("new");
     sdHandler->writeName(newName);
 
-    String deviceID = sdHandler->deviceID;
+    String deviceID = sdHandler->getDeviceID();
 
-    MDNS.close();
     MDNS.setHostname(newName);
-    MDNS.begin(deviceID);
 
     server.send(200, "text/plain", "Nombre cambiado correctamente");
 }
 
-static void handleReset(void)
+static void handlePowerChange(void)
 {
-    ESP.eraseConfig();
-    ESP.reset();
+    String newPower = server.arg("new");
+    sdHandler->writePower(newPower.toInt());
+
+    server.send(200, "text/plain", "Power changed successfully");
+}
+
+static void handlePowerGet(void)
+{
+    StaticJsonDocument<100> data;
+    String jsonOutput;
+
+    data["power"] = sdHandler->getPower();
+
+    serializeJson(data, jsonOutput);
+
+    server.send(200, "application/json", jsonOutput);
 }
 
 static void webSocketEvent(uint8_t num, WStype_t type, uint8_t *payload, size_t length)
@@ -139,8 +163,8 @@ void WebServer::init(ConfigValues *_configValues, SDHandler *_sdHandler, SensorD
     realTimeClock = _realTimeClock;
     relayHandler = _relayHandler;
 
-    String instanceName = sdHandler->deviceName;
-    String mdnsAddress = sdHandler->deviceID;
+    String instanceName = sdHandler->getName();
+    String mdnsAddress = sdHandler->getDeviceID();
 
     hMDNSService = MDNS.addService(0, "arev", "tcp", 80);
     MDNS.addServiceTxt(hMDNSService, "type", 1);
@@ -150,11 +174,17 @@ void WebServer::init(ConfigValues *_configValues, SDHandler *_sdHandler, SensorD
     server.on("/", handleRoot);
     server.on("/files/day", handleDayFile);
     server.on("/files/month", handleMonthFile);
+
     server.on("/config/set", handleConfigSet);
     server.on("/config/get", handleConfigGet);
-    server.on("/time", handleTimeAdjust);
+
+    server.on("/time/set", handleTimeChange);
+    server.on("/time/get", handleTimeGet);
+
     server.on("/name", handleNameChange);
-    server.on("/reset", handleReset);
+
+    server.on("/power/set", handlePowerChange);
+    server.on("/power/get", handlePowerGet);
 
     server.begin();
 

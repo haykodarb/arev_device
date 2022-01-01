@@ -14,15 +14,16 @@ void setup(void)
 
   Serial.begin(115200);
 
-  relayHandler.init(&configValues, &sdHandler, &realTimeClock);
-
-  WifiHandler_init(&sdHandler);
+  Wire.begin(0, 2);
 
   realTimeClock.init();
 
   sensorData.init();
 
   sdHandler.init(&realTimeClock, &sensorData, &configValues);
+  relayHandler.init(&configValues, &sdHandler, &realTimeClock);
+
+  WifiHandler_init(&sdHandler);
 
   webServer.init(&configValues, &sdHandler, &sensorData, &realTimeClock, &relayHandler);
 

@@ -5,7 +5,7 @@
 
 #include "DallasTemperature.h"
 
-#define SENSOR_PIN 0U
+#define SENSOR_PIN 4U
 
 class SensorData
 {
